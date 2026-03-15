@@ -37,16 +37,91 @@
             padding: 0 2rem;
         }
         .logo { font-size: 2rem; font-weight: bold; }
-        .nav-menu { display: flex; list-style: none; gap: 2rem; }
-        .nav-menu a {
+        /* ── Nav right wrapper ── */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* ── Login button ── */
+        .nav-login-btn {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #000;
+            font-weight: 700;
+            padding: 0.4rem 1.1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: opacity 0.2s, transform 0.15s;
+            white-space: nowrap;
+            box-shadow: 0 3px 12px rgba(79,172,254,0.35);
+        }
+        .nav-login-btn:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+
+        /* ── Menu button ── */
+        .nav-menu-btn {
+            background: transparent;
+            color: #e0e0e0;
+            font-weight: 600;
+            padding: 0.4rem 1.1rem;
+            border-radius: 20px;
+            border: 1px solid #2a3449;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .nav-menu-btn:hover {
+            border-color: #4facfe;
+            color: #4facfe;
+            background: rgba(79,172,254,0.07);
+        }
+        .nav-menu-btn.open {
+            border-color: #4facfe;
+            color: #4facfe;
+            background: rgba(79,172,254,0.1);
+        }
+
+        /* ── Dropdown ── */
+        .nav-dropdown {
+            display: none;
+            position: fixed;
+            top: 64px;
+            right: 1rem;
+            background: linear-gradient(160deg, #1a2235 0%, #111827 100%);
+            border: 1px solid #1e2d45;
+            border-radius: 14px;
+            padding: 0.5rem 0;
+            min-width: 190px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            z-index: 1050;
+            flex-direction: column;
+        }
+        .nav-dropdown.open {
+            display: flex;
+            animation: dropIn 0.18s cubic-bezier(.22,1,.36,1);
+        }
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+            to   { opacity: 1; transform: none; }
+        }
+        .nav-dropdown a {
             color: #e0e0e0;
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s;
+            font-size: 0.95rem;
+            padding: 0.75rem 1.3rem;
+            transition: background 0.15s, color 0.15s;
+            display: block;
         }
-        .nav-menu a:hover {
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        .nav-dropdown a:hover {
+            background: rgba(79,172,254,0.1);
+            color: #4facfe;
         }
         .back-home {
             position: fixed;
@@ -260,12 +335,11 @@
         }
 
         @media (max-width: 768px) {
-            .nav-menu { flex-direction: column; gap: 1rem; }
             .hero-title, .section-title { font-size: 2.5rem; }
-            .nav-container { flex-direction: column; gap: 1rem; }
             .back-home { position: static; margin: 1rem auto; display: block; }
             .back-home img { height: 60px; }
             .contact-form { padding: 1.6rem; }
+            .logo { font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -278,12 +352,15 @@
     <header class="header">
         <nav class="nav-container">
             <div class="logo">🚚 Taarakuller</div>
-            <ul class="nav-menu">
-                <li><a href="testify.html">Logi sisse</a></li>
-                <li><a href="#about">Meie kohta</a></li>
-                <li><a href="#faq">KKK</a></li>
-                <li><a href="#contact">Võta ühendust</a></li>
-            </ul>
+            <div class="nav-right">
+                <a href="testify.html" class="nav-login-btn">Logi sisse</a>
+                <button class="nav-menu-btn" id="menu-btn" onclick="toggleMenu()">Menüü &#9662;</button>
+            </div>
+            <div class="nav-dropdown" id="nav-dropdown">
+                <a href="#about" onclick="closeMenu()">Meie kohta</a>
+                <a href="#faq" onclick="closeMenu()">KKK</a>
+                <a href="#contact" onclick="closeMenu()">Võta ühendust</a>
+            </div>
         </nav>
     </header>
 
@@ -457,5 +534,21 @@
     }
     </script>
 
+    <script>
+    function toggleMenu() {
+        document.getElementById('menu-btn').classList.toggle('open');
+        document.getElementById('nav-dropdown').classList.toggle('open');
+    }
+    function closeMenu() {
+        document.getElementById('menu-btn').classList.remove('open');
+        document.getElementById('nav-dropdown').classList.remove('open');
+    }
+    document.addEventListener('click', function(e) {
+        const btn  = document.getElementById('menu-btn');
+        const menu = document.getElementById('nav-dropdown');
+        if (!btn.contains(e.target) && !menu.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+    </script>
 </body>
 </html>
